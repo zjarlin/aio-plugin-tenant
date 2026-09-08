@@ -27,6 +27,7 @@ impl ApplicationPlugin for TenantPlugin {
                 id: "system",
                 label: "系统",
             },
+            required_permission: None,
             render: TenantPage,
         }]
     }
@@ -39,6 +40,7 @@ impl ApplicationAccountPlugin for TenantPlugin {
             label: "切换租户".to_owned(),
             icon: Some("tenant".to_owned()),
             page_id: Some("tenants".to_owned()),
+            required_permission: None,
             destructive: false,
         }]
     }
