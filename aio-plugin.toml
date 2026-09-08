@@ -3,3 +3,6 @@ path = "client"
 
 [plugin.server]
 path = "server"
+
+[plugin.dependencies]
+identity = ">=0.1.0"
