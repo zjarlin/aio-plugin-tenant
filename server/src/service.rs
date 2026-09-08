@@ -58,6 +58,8 @@ impl TenantService {
             sqlx::query("INSERT INTO role_permissions (tenant_id, role_id, permission) VALUES ($1, 'tenant-admin', $2)")
                 .bind(&tenant_id).bind(permission).execute(&mut *transaction).await?;
         }
+        sqlx::query("INSERT INTO role_permissions (tenant_id, role_id, permission) VALUES ($1, 'member', 'workspace:view')")
+            .bind(&tenant_id).execute(&mut *transaction).await?;
         transaction.commit().await?;
         Ok(TenantItem {
             id: tenant_id,
