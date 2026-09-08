@@ -1,0 +1,13 @@
+[package]
+name = "aio-plugin-tenant-client"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+az-dioxus-admin-shell = { git = "https://github.com/zjarlin/dioxus-admin-workbench.git", rev = "7ffc224ce07f12b0726738f5cd7198567e9fb91d" }
+dill = "0.15.0"
+dioxus = { version = "=0.7.9", default-features = false, features = ["macro", "html", "signals"] }
+
+[lints]
+workspace = true
