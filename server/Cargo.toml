@@ -5,7 +5,7 @@ edition.workspace = true
 license.workspace = true
 
 [dependencies]
-aio-plugin-identity-server = { git = "https://github.com/zjarlin/aio-plugin-identity.git", rev = "c47f08e4e8c0b3349a5df4cb864626af80609c51" }
+aio-plugin-identity-server = { git = "https://github.com/zjarlin/aio-plugin-identity.git", rev = "d689b45e9a2070721d953747e361f6fb7035f61f" }
 aio-plugin-tenant-model = { path = "../model" }
 anyhow = "1.0.99"
 axum = "0.8.6"
