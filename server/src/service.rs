@@ -39,6 +39,21 @@ impl TenantService {
             .collect())
     }
 
+    pub async fn rename(&self, tenant_id: &str, label: &str) -> Result<()> {
+        let label = label.trim();
+        ensure!(
+            !label.is_empty() && label.chars().count() <= 80,
+            "租户名称需要 1 到 80 个字符"
+        );
+        let result = sqlx::query("UPDATE tenants SET label = $2 WHERE id = $1")
+            .bind(tenant_id)
+            .bind(label)
+            .execute(&self.pool)
+            .await?;
+        ensure!(result.rows_affected() == 1, "租户不存在");
+        Ok(())
+    }
+
     pub async fn create(&self, user_id: &str, label: &str) -> Result<TenantItem> {
         let label = label.trim();
         ensure!(!label.is_empty(), "租户名称不能为空");

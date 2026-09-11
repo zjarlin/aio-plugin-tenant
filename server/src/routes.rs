@@ -6,10 +6,10 @@ use aio_plugin_tenant_model::{
 };
 use axum::{
     Json, Router,
-    extract::State,
+    extract::{Path, State},
     http::{HeaderMap, StatusCode},
     response::{IntoResponse, Response},
-    routing::{get, post},
+    routing::{get, post, put},
 };
 
 use crate::TenantService;
@@ -25,6 +25,7 @@ pub fn router(tenants: Arc<TenantService>, identity: Arc<IdentityService>) -> Ro
         .route("/api/plugins/tenant/health", get(health))
         .route("/api/tenants", get(list).post(create))
         .route("/api/tenants/switch", post(switch))
+        .route("/api/tenants/{id}", put(rename))
         .with_state(TenantState { tenants, identity })
 }
 
@@ -58,6 +59,21 @@ async fn create(
             .create(&session.user_id, &request.label)
             .await?,
     }))
+}
+
+async fn rename(
+    State(state): State<TenantState>,
+    headers: HeaderMap,
+    Path(id): Path<String>,
+    Json(request): Json<CreateTenantRequest>,
+) -> Result<StatusCode, TenantHttpError> {
+    let session = authenticate(&state, &headers).await?;
+    require(&session, "tenant:manage")?;
+    if id != session.tenant_id {
+        return Err(TenantHttpError::forbidden("请先切换到目标租户再修改名称"));
+    }
+    state.tenants.rename(&id, &request.label).await?;
+    Ok(StatusCode::NO_CONTENT)
 }
 
 async fn switch(
